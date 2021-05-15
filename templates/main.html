@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=1080, user-scalable=no, target-densitydpi=device-dpi" />
+	<title>게시판</title>
+    <link rel="icon" href="http://bootstrapk.com/favicon.ico">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/static/css/common.css" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="row ">
+            <div class="col-12">
+                <h1 class="title">김정은님의 게시판 </h1>
+            </div>
+            
+        </div>
+        <div class="container">
+            <div class="row col-md-12 custyle">
+            <table class="table table-striped custab mb-0 table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center">NO</th>
+                        <th class="text-center">제목</th>
+                        <th class="text-center">작성자</th>
+                        <th class="text-center">작성일</th>
+                        <!-- <th class="text-center">Action</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if article_list %} {% for result in article_list %}
+                    <tr>
+                        <td class="text-center">{{result['articleIdx']}}</td>
+                        <td class="text-center">{{result['title']}}</td>
+                        <td class="text-center">{{result['userId']}}</td>
+                        <td class="text-center">{{result['regDate']}}</td>
+                        <!-- <td class="text-center"><a class='btn btn-info btn-xs' href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a> <a href="#" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span> Del</a></td> -->
+                    </tr>
+                    {% endfor %}{% else %}
+                    <tr>
+                        <td colspan="4" class="text-center" align="center">조회할 DATA가 없습니다</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <div class="text-right">
+                <button  class="btn btn-primary" onclick="location.href='/write'"><b>+</b> 등록</a>
+            </div>
+        </div>
+        </div>
+        <div class="paging">
+    
+        </div>
+    </div>
+   
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js" ></script>
+<script src="../static/js/bootstrap.min.js"></script>
+</body>
+</html>

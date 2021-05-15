@@ -1,0 +1,68 @@
+@charset "utf-8";
+body, html {margin:0;padding:0}
+ul,li{list-style:none; padding:0; margin:0}
+img{width:100%;  padding:0; margin:0;}
+@font-face {
+	font-family: 'nsm';
+	font-style: normal;
+	font-weight: 500;
+	src: local('Noto Sans Medium'), local('NotoSans-Medium');
+	src: url(../fonts/NotoSansKrMedium.eot);
+	src: url(../fonts/NotoSansKrMedium.eot?#iefix) format('embedded-opentype'),
+	url(../fonts/NotoSansKrMedium.woff) format('woff');
+	/*url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKrMedium.otf) format('opentype');*/
+}
+@font-face {
+	font-family: 'nsr';
+	font-style: normal;
+	font-weight: 400;
+	src: 
+	url(../fonts/NotoSansKrRegular.eot),
+	url(../fonts/NotoSansKrRegular.eot?#iefix) format('embedded-opentype'),
+	url(../fonts/NotoSansKrRegular.woff) format('woff');
+}
+@font-face {
+	font-family: 'nsd';
+	font-style: normal;
+	font-weight: 300;
+	src:
+	url(../fonts/NotoSansKrDemiLight.eot),
+	url(../fonts/NotoSansKrDemiLight.eot?#iefix) format('embedded-opentype'),
+	url(../fonts/NotoSansKrDemiLight.woff) format('woff');
+}
+/* css_reset */
+html{-webkit-text-size-adjust: antialiased;-moz-osx-font-smoothing: grayscale;}
+html,body{position:relative;width:100%;overflow-x:hidden}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,form,fieldset,p,button,input{font-family:nsd; font-weight:300; margin:0;padding:0;-webkit-text-size-adjust:none;word-break:keep-all;}
+input,textarea{border-radius:0;resize:none;background:transparent;}
+body,h1,h2,h3,h4,h5,h6,input,button{font-family:nsd;font-size:12px; font-weight:300; }
+body{color:#000;word-wrap:break-word;word-break:break-all;font-size: 15px;} font-weight:300; 
+caption, legend{font-size: 0;line-height: 0;text-indent: -5000px;}
+img, fieldset, iframe{border:0 none;vertical-align:top;}
+fieldset{font-size:0;}
+ul,ol{list-style:none;}
+a{color:#000;text-decoration:none;}
+i,em,address{font-style:normal;}
+table{border-collapse:collapse;border-spacing:0;}
+hr{display:none;}
+input[type="submit"]{cursor:pointer;}
+input:-webkit-autofill {-webkit-box-shadow: 0 0 0 1000px white inset;}
+input[type="text"], input[type="number"], input[type="email"], input[type="date"], input[type="text"], input[type="search"], input[type="tel"], input[type="time"], input[type="password"] {width: 100%;height: 50px;line-height: 1;background: #fff;;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;border: none;vertical-align: middle;margin: 0;padding: 0;color: #000;line-height: 1.4;font-family: nsd; color:#999999; font-size:16px; padding-left:15px; outline:none;}
+::-webkit-input-placeholder {color:#bbb;font-size:16px;letter-spacing:-1px}z
+::-moz-placeholder {color:#999999;font-size:16px}
+::-ms-input-placeholder {color:#999999;font-size:16px}
+
+.title{
+    margin: 20px 5% 0 ;
+    font-size: 20px;
+    height: 50px;
+    vertical-align: middle;
+
+}
+.custab{
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin: 10px 0;
+    transition: 0.5s;
+    }

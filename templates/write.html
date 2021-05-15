@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=1080, user-scalable=no, target-densitydpi=device-dpi" />
+	<title>게시판</title>
+    <link rel="icon" href="http://bootstrapk.com/favicon.ico">
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/static/css/common.css" rel="stylesheet">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="row ">
+            <div class="col-12">
+                <h1 class="title">김정은님의 게시판 </h1>
+            </div>
+            
+        </div>
+        <div class="container">
+            <form class="form-horizontal" method="POST">
+                
+                <!-- Form Name -->
+                <legend>글쓰기</legend>
+                
+                
+                <!-- Text input-->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="title">제목</label>  
+                  <div class="col-md-4">
+                  <input id="title" name="title" type="text" placeholder="제목을 입력하세요" class="form-control ">
+                  </div>
+                </div>
+                <!-- Textarea -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="source_description">내용</label>
+                    <div class="col-md-4">                     
+                      <textarea class="form-control" id="source_description" name="source_description"  style="resize: none;height: 300px;"></textarea>
+                    </div>
+                  </div>   
+                 <!-- Text input-->
+                 <div class="form-group">
+                    <label class="col-md-4 control-label" for="article_authors">작성자</label>  
+                    <div class="col-md-4">
+                    <input id="article_authors" name="article_authors" type="text" placeholder="작성자 이름을 입력하세요" class="form-control input-md">
+                      
+                    </div>
+                </div>   
+                <!-- Text input-->
+                <div class="form-group">
+                <label class="col-md-4 control-label" for="article_password">비밀번호</label>  
+                <div class="col-md-4">
+                <input id="article_password" name="article_password" type="password" placeholder="비밀번호를 입력하세요" class="form-control input-md">
+                    
+                </div>
+            </div>           
+
+                <!-- <div class="form-group">
+                    <label class="col-md-4 control-label" for="source_image">파일</label>
+                    <div class="col-md-4">
+                      <input id="source_image" name="source_image" class="input-file" type="file">
+                    </div>
+                  </div>                
+                
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="article_snippet">Snippet</label>  
+                  <div class="col-md-4">
+                  <input id="article_snippet" name="article_snippet" type="text" placeholder="Article Snippet" class="form-control input-md">
+                    
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="article_date">Date</label>  
+                  <div class="col-md-4">
+                  <input id="article_date" name="article_date" type="text" placeholder="article date of publication " class="form-control input-md">
+                    
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="article_categories">Categories</label>
+                  <div class="col-md-4">
+                    <select id="article_categories" name="article_categories" class="form-control">
+                      <option value="1">Option one</option>
+                      <option value="2">Option two</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="source_tags">Tage</label>
+                  <div class="col-md-4">
+                    <select id="source_tags" name="source_tags" class="form-control">
+                      <option value="">Option one</option>
+                      <option value="">Option two</option>
+                    </select>
+                  </div>
+                </div> -->
+                <div class="text-right"> <!--You can add col-lg-12 if you want -->
+                    <input type="submit" class="btn-info btn" value="등록하기"></input>
+                </div>
+            </form>
+        </div>
+
+         
+         ​
+    </div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js" ></script>
+<script src="../static/js/bootstrap.min.js"></script>
+</body>
