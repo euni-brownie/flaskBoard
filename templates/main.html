@@ -11,10 +11,18 @@
     <link href="/static/css/common.css" rel="stylesheet">
 </head>
 <body>
+<script>
+var result = {{request.args.get('updated')|tojson|safe}};
+if(result!=null){
+   if(result=="True"){
+       alert("수정되었습니다");
+   } 
+}
+</script>
     <div class="wrapper">
         <div class="row ">
             <div class="col-12">
-                <h1 class="title">김정은님의 게시판 </h1>
+                <h1 class="title"><a href="/main">김정은님의 게시판 </a></h1>
             </div>
             
         </div>
@@ -34,7 +42,7 @@
                     {% if article_list %} {% for result in article_list %}
                     <tr>
                         <td class="text-center">{{result['articleIdx']}}</td>
-                        <td class="text-center">{{result['title']}}</td>
+                        <td class="text-center"><a href="/article?articleIdx={{result['articleIdx']}}">{{result['title']}}</a></td>
                         <td class="text-center">{{result['userId']}}</td>
                         <td class="text-center">{{result['regDate']}}</td>
                         <!-- <td class="text-center"><a class='btn btn-info btn-xs' href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a> <a href="#" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span> Del</a></td> -->
@@ -61,5 +69,6 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js" ></script>
 <script src="../static/js/bootstrap.min.js"></script>
+
 </body>
 </html>

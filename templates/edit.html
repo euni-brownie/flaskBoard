@@ -11,6 +11,14 @@
     <link href="/static/css/common.css" rel="stylesheet">
 </head>
 <body>
+<script>
+var result = {{request.args.get('updated')|tojson|safe}};
+if(result!=null){
+    if(result!="True"){
+        alert("내용을 확인하세요!");
+    } 
+}    
+</script>
     <div class="wrapper">
         <div class="row ">
             <div class="col-12">
@@ -19,17 +27,16 @@
             
         </div>
         <div class="container">
-            <form class="form-horizontal" method="POST" action="/create">
+            <form class="form-horizontal" method="POST" action="/update">
                 
                 <!-- Form Name -->
                 <legend>글쓰기</legend>
-                
-                
+                <input type="hidden" id="article_idx" name="article_idx" value="{{article[0]['articleIdx']}}">
                 <!-- Text input-->
                 <div class="form-group">
                   <label class="col-md-4 control-label" for="article_title">제목</label>  
                   <div class="col-md-4">
-                  <input id="article_title" name="article_title" type="text" placeholder="제목을 입력하세요" class="form-control ">
+                  <input id="article_title" name="article_title" type="text" value="{{article[0]['title']}}" class="form-control ">
                   </div>
                 </div>
                 <!-- Textarea -->
@@ -43,7 +50,7 @@
                  <div class="form-group">
                     <label class="col-md-4 control-label" for="article_author">작성자</label>  
                     <div class="col-md-4">
-                    <input id="article_author" name="article_author" type="text" value="김정은"placeholder="작성자 이름을 입력하세요" class="form-control input-md">
+                    <input id="article_author" name="article_author" type="text" value="{{article[0]['userId']}}"placeholder="작성자 이름을 입력하세요" class="form-control input-md" readonly>
                       
                     </div>
                 </div>   
@@ -113,12 +120,31 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js" ></script>
 <script src="../static/js/bootstrap.min.js"></script>
 <script>
+var targetPw = {{article[0]['password']|tojson|safe}};
+var content = {{article[0]['content']|tojson|safe}};
+var formatted = String(content).replace(/(<br>|<br\/>|<br \/>|&lt;br&gt;)/g, '\r\n');
+$("#article_content").val(formatted);  
 
 $("form").submit(function(e) {
-    var result = $("#article_content").val().replace(/(\n|\r\n)/g, '<br>');
-    $("#article_content").val(result);
-    alert("등록완료되었습니다");
-    return true;
+
+    var isTrue = confirm("수정하시겠습니까?");
+        if(isTrue) {
+            
+            if($("input:password[name='article_password']").val() == targetPw) {
+
+                var result = $("#article_content").val().replace(/(\n|\r\n)/g, '<br>');
+                $("#article_content").val(result);
+                // alert("수정되었습니다");
+                return true;
+
+            }else {
+                
+                alert("비밀번호가 잘못되었습니다.");
+                $("input:password[name='article_password']").val("");
+            }
+
+        }
+
 });
 
 

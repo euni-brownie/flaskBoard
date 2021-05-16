@@ -66,3 +66,25 @@ input[type="text"], input[type="number"], input[type="email"], input[type="date"
     margin: 10px 0;
     transition: 0.5s;
     }
+
+.read-group{margin-bottom:15px;}
+.read-group > label{text-align: center;margin: 5px 0;}
+.read {display:block;width:80%;height:34px;padding:6px 12px;font-size:14px;line-height:1.42857143;color:#555;background-color:#fff;}
+.read-password {margin: 20px 0 !important;}
+
+
+pre{    
+	font-family:nsd !important;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	margin:0 !important;
+	padding:0 !important;
+	border:0 !important;
+	outline:0 !important;
+	font-size:100% !important;
+	vertical-align:baseline !important;
+	background:transparent !important;
+}
+
+
