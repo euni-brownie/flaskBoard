@@ -55,14 +55,17 @@ def create_article(request):
     engine = dbconn.mysql_engine()
     with engine.connect() as conn:
 
-        query = f"""
-                    INSERT INTO ARTICLE(userId,title,content,password)
-                    VALUES("{article['article_author']}", "{article['article_title']}", "{article['article_content']}","{article['article_password']}");
-                """
-
-        result = conn.execute(query)
-        isSuccessed = True if result.rowcount == 1 else False
-    return isSuccessed
+        # query = f"""
+        #             INSERT INTO ARTICLE(userId,title,content,password)
+        #             VALUES("{article['article_author']}", "{article['article_title']}", "{article['article_content']}","{article['article_password']}");
+        #         """
+        # result = conn.execute(query)
+        query = text(
+            'INSERT INTO ARTICLE(userId,title,content,password) VALUES(:userId, :title, :content,:password)')
+        result = conn.execute(
+            query, userId=article['article_author'], title=article['article_title'], content=article['article_content'], password=article['article_password'])
+        is_successed = True if result.rowcount == 1 else False
+    return is_successed
 
 
 def delete_article(request):
@@ -76,9 +79,9 @@ def delete_article(request):
                 """
 
         result = conn.execute(query)
-    isSuccessed = True if result.rowcount == 1 else False
+    is_successed = True if result.rowcount == 1 else False
 
-    return isSuccessed
+    return is_successed
 
 
 def update_article(request):
@@ -98,14 +101,15 @@ def update_article(request):
     engine = dbconn.mysql_engine()
     with engine.connect() as conn:
 
-        query = f"""
-                    UPDATE ARTICLE SET title = "{article['article_title']}", content = "{article['article_content']}", regDate="{curdate}"
-                    WHERE articleIdx = {article['article_idx']};
-                """
-        result = conn.execute(query)
-        # query = 'UPDATE ARTICLE SET title=:title, content=:content, regDate=:regDate WHERE articleIdx=:articleIdx'
-        # result = conn.execute(
-        #     query, title=article['article_title'], content=article['article_content'], regDate=curdate, articleIdx=article['article_idx'])
+        # query = f"""
+        #             UPDATE ARTICLE SET title = "{article['article_title']}", content = "{article['article_content']}", regDate="{curdate}"
+        #             WHERE articleIdx = {article['article_idx']};
+        #         """
+        # result = conn.execute(query)
+        query = text(
+            'UPDATE ARTICLE SET title=:title, content=:content, regDate=:regDate WHERE articleIdx=:articleIdx')
+        result = conn.execute(
+            query, title=article['article_title'], content=article['article_content'], regDate=curdate, articleIdx=article['article_idx'])
         print("##rowcount : ", result.rowcount)
     is_successed = True if result.rowcount == 1 else False
     return article['article_idx'], is_successed

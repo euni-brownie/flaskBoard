@@ -106,7 +106,7 @@ if(result!=null){
                   </div>
                 </div> -->
                 <div class="text-right"> <!--You can add col-lg-12 if you want -->
-                    <input type="submit" class="btn-info btn" value="등록하기"></input>
+                    <input type="submit" class="btn-info btn" value="수정하기"></input>
                 </div>
             </form>
         </div>
@@ -141,6 +141,7 @@ $("form").submit(function(e) {
                 
                 alert("비밀번호가 잘못되었습니다.");
                 $("input:password[name='article_password']").val("");
+                return false;
             }
 
         }

@@ -12,6 +12,12 @@
 </head>
 <body>
 <script>
+    var result = {{request.args.get('updated')|tojson|safe}};
+    if(result!=null) {
+        if(result=="True") {
+            alert("수정되었습니다");
+        } 
+    }
     var articleIdx = {{article[0]['articleIdx']|tojson|safe}};
     var targetPw = {{article[0]['password']|tojson|safe}};
 
@@ -20,12 +26,14 @@
         if(isTrue) {
             
             if($("input:password[name='article_password']").val() == targetPw) {
+             
                 location.href = "/delete?articleIdx="+articleIdx;
+
             }else {
+
                 alert("비밀번호가 잘못되었습니다.");
                 $("input:password[name='article_password']").val("");
             }
-
         }
     }
         function update_article() {

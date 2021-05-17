@@ -12,12 +12,20 @@
 </head>
 <body>
 <script>
-var result = {{request.args.get('updated')|tojson|safe}};
-if(result!=null){
-   if(result=="True"){
-       alert("수정되었습니다");
-   } 
+        var updated = {{request.args.get('updated')|tojson|safe}};
+        // var created = {{request.args.get('created')|tojson|safe}};
+        // var deleted = {{request.args.get('deleted')|tojson|safe}};
+if(updated!=null) {
+    if(updated=="True") {
+        alert("수정되었습니다");
+    } 
 }
+// if(created!=null) {
+//     if(created=="True") {
+//         alert("등록완료되었습니다");
+//     } 
+// }
+
 </script>
     <div class="wrapper">
         <div class="row ">

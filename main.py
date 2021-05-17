@@ -41,8 +41,8 @@ def _article():
 
 @application.route('/create', methods=['POST'])
 def _create():
-    result = article_dao.create_article(request)
-    return redirect(url_for('_main'))
+    is_successed = article_dao.create_article(request)
+    return redirect(url_for('_main', created=is_successed))
 
 
 @application.route('/update', methods=['POST'])
@@ -56,8 +56,8 @@ def _update():
 
 @ application.route('/delete')
 def _delete():
-    result = article_dao.delete_article(request)
-    return redirect(url_for('_main'))
+    is_successed = article_dao.delete_article(request)
+    return redirect(url_for('_main', deleted=is_successed))
 
 
 @ application.route('/method', methods=['GET', 'POST'])
