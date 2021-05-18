@@ -16,6 +16,11 @@ def _hellohtml():
     return render_template("login.html")
 
 
+@application.route('/join')
+def _join():
+    return render_template("join.html")
+
+
 @application.route('/main')
 def _main():
     article_list = article_dao.get_list()

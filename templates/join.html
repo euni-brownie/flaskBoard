@@ -1,9 +1,8 @@
-{% include 'head.html' %}
+{% include 'head.html'%}
 <body>
     <div class="wrapper">
         <div class="row ">
             <div class="col-12">
-                <h1 class="title"><a href="/main">김정은님의 게시판 </a></h1>
             </div>
             
         </div>
@@ -11,7 +10,7 @@
             <form class="form-horizontal" method="POST" action="/create">
                 
                 <!-- Form Name -->
-                <legend>글쓰기</legend>
+                <legend>회원가입</legend>
                 
                 
                 <!-- Text input-->
@@ -92,24 +91,5 @@
                 </div>
             </form>
         </div>
-
-         
-         ​
     </div>
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js" ></script>
-<script src="../static/js/bootstrap.min.js"></script>
-<script>
-
-$("form").submit(function(e) {
-    var result = $("#article_content").val().replace(/(\n|\r\n)/g, '<br>');
-    $("#article_content").val(result);
-    // alert("등록완료되었습니다");
-    return true;
-});
-
-
-</script>
 </body>

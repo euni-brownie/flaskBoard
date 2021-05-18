@@ -107,9 +107,9 @@ def update_article(request):
         #         """
         # result = conn.execute(query)
         query = text(
-            'UPDATE ARTICLE SET title=:title, content=:content, regDate=:regDate WHERE articleIdx=:articleIdx')
+            'UPDATE ARTICLE SET title=:title, content=:content, updateDate=:updateDate WHERE articleIdx=:articleIdx')
         result = conn.execute(
-            query, title=article['article_title'], content=article['article_content'], regDate=curdate, articleIdx=article['article_idx'])
+            query, title=article['article_title'], content=article['article_content'], updateDate=curdate, articleIdx=article['article_idx'])
         print("##rowcount : ", result.rowcount)
     is_successed = True if result.rowcount == 1 else False
     return article['article_idx'], is_successed
