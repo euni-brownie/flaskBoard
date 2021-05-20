@@ -8,34 +8,56 @@
         } 
     }
     var articleIdx = {{article[0]['articleIdx']|tojson|safe}};
-    var targetPw = {{article[0]['password']|tojson|safe}};
+    // var targetPw = {{article[0]['password']|tojson|safe}};
 
     function delete_article() {
         var isTrue = confirm("삭제하시겠습니까?");
         if(isTrue) {
-            
-            if($("input:password[name='article_password']").val() == targetPw) {
+            if(check_password()) {
              
                 location.href = "/delete?articleIdx="+articleIdx;
 
-            }else {
+            } else {
 
                 alert("비밀번호가 잘못되었습니다.");
                 $("input:password[name='article_password']").val("");
             }
         }
     }
-        function update_article() {
-            
-            if($("input:password[name='article_password']").val() == targetPw) {
-                location.href = "/edit?articleIdx="+articleIdx;
-            }else {
-                alert("비밀번호가 잘못되었습니다.");
-                $("input:password[name='article_password']").val("");
-            }
 
-                
-         }
+    function update_article() {
+
+        if(check_password()) {
+            location.href = "/edit?articleIdx="+articleIdx;
+        }else {
+            alert("비밀번호가 잘못되었습니다.");
+            $("input:password[name='article_password']").val("");
+        }
+            
+      }
+
+    function check_password() {
+
+      var password = $("input:password[name='article_password']").val();
+      var corrected = false;
+      $.ajax({
+            url: "/check/password",
+            type: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify({ password: password, articleIdx: articleIdx }),
+            dataType: "json",
+            async:false,
+            success: function (data) {
+              corrected =  (data.correct)? true : false;
+            },
+            error: function (xhr, status, error) {
+                alert("code : " + xhr.status + "\nmessage : " + xhr.responseText);
+            },
+        });
+      return corrected;
+    }
 </script>
     <div class="wrapper">
         <div class="row ">
@@ -137,7 +159,9 @@
 <script src="../static/js/bootstrap.min.js"></script>
 <script>
 var content = {{article[0]['content']|tojson|safe}} ;
-var formatted = "<pre>"+String(content).replace(/(<br>|<br\/>|<br \/>|&lt;br&gt;)/g, '\r\n')+"</pre> ";
+// console.log(content);
+// var formatted = "<pre>"+String(content).replace(/(<br>|<br\/>|<br \/>|&lt;br&gt;)/g, '\r\n')+"</pre> ";
+var formatted = "<pre>"+content+"</pre> ";
 $(".article_content").html(formatted);  
 </script>
 </body>

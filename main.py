@@ -65,6 +65,11 @@ def _delete():
     return redirect(url_for('_main', deleted=is_successed))
 
 
+@ application.route('/check/password', methods=['POST'])
+def _check_password():
+    return article_dao.check_password(request)
+
+
 @ application.route('/method', methods=['GET', 'POST'])
 def method():
     if request.method == 'GET':

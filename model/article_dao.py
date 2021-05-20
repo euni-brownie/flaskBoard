@@ -1,7 +1,7 @@
 from sqlalchemy import text
 import connection as dbconn
 import pandas as pd
-from flask import request
+from flask import request, jsonify
 import datetime
 # from html.parser import HTMLParser
 import html
@@ -113,3 +113,24 @@ def update_article(request):
         print("##rowcount : ", result.rowcount)
     is_successed = True if result.rowcount == 1 else False
     return article['article_idx'], is_successed
+
+
+def check_password(request):
+    data = request.get_json()
+    password = data['password']
+    article_idx = data['articleIdx']
+
+    engine = dbconn.mysql_engine()
+    with engine.connect() as conn:
+
+        query = f"""
+                    SELECT * FROM ARTICLE
+                    WHERE articleIdx = {article_idx} ;
+                """
+
+        result = conn.execute(query)
+    df_result = pd.DataFrame(
+        result.fetchall(), columns=result.keys())
+    article = df_result.to_dict('records')
+    correct = True if(password == article[0]['password']) else False
+    return jsonify(correct=correct)

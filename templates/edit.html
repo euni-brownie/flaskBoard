@@ -32,7 +32,7 @@ if(result!=null){
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="article_content">내용</label>
                     <div class="col-md-4">                     
-                      <textarea class="form-control" id="article_content" name="article_content"  style="resize: none;height: 300px;"></textarea>
+                      <textarea class="form-control" id="article_content" name="article_content" value="{{article[0]['title']|tojson|safe}}" style="resize: none;height: 300px;"></textarea>
                     </div>
                   </div>   
                  <!-- Text input-->
@@ -109,17 +109,18 @@ if(result!=null){
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js" ></script>
 <script src="../static/js/bootstrap.min.js"></script>
 <script>
-var targetPw = {{article[0]['password']|tojson|safe}};
+// var targetPw = {{article[0]['password']|tojson|safe}};
 var content = {{article[0]['content']|tojson|safe}};
-var formatted = String(content).replace(/(<br>|<br\/>|<br \/>|&lt;br&gt;)/g, '\r\n');
-$("#article_content").val(formatted);  
+var articleIdx = {{article[0]['articleIdx']|tojson|safe}};
+// var formatted = String(content).replace(/(<br>|<br\/>|<br \/>|&lt;br&gt;)/g, '\r\n');
+// $("#article_content").val(formatted);  
 
 $("form").submit(function(e) {
 
     var isTrue = confirm("수정하시겠습니까?");
         if(isTrue) {
             
-            if($("input:password[name='article_password']").val() == targetPw) {
+            if(check_password()) {
 
                 var result = $("#article_content").val().replace(/(\n|\r\n)/g, '<br>');
                 $("#article_content").val(result);
@@ -137,6 +138,27 @@ $("form").submit(function(e) {
 
 });
 
+function check_password() {
 
+var password = $("input:password[name='article_password']").val();
+var corrected = false;
+$.ajax({
+      url: "/check/password",
+      type: "post",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      data: JSON.stringify({ password: password, articleIdx: articleIdx }),
+      dataType: "json",
+      async:false,
+      success: function (data) {
+        corrected =  (data.correct)? true : false;
+      },
+      error: function (xhr, status, error) {
+          alert("code : " + xhr.status + "\nmessage : " + xhr.responseText);
+      },
+  });
+return corrected;
+}
 </script>
 </body>
