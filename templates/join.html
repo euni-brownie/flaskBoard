@@ -4,92 +4,188 @@
         <div class="row ">
             <div class="col-12">
             </div>
-            
         </div>
-        <div class="container">
-            <form class="form-horizontal" method="POST" action="/create">
+        <div class="container join-container">
+            <form class="form-horizontal" method="POST">
                 
                 <!-- Form Name -->
                 <legend>회원가입</legend>
                 
                 
                 <!-- Text input-->
-                <div class="form-group">
-                  <label class="col-md-4 control-label" for="article_title">제목</label>  
+                <div class="form-group has-btn">
+                  <label class="col-md-4 control-label" for="user_id">아이디</label>  
                   <div class="col-md-4">
-                  <input id="article_title" name="article_title" type="text" placeholder="제목을 입력하세요" class="form-control ">
+                  <input id="user_id" name="user_id" type="text" placeholder="아이디를 입력하세요" class="form-control " >
+                  </div>
+                  <div class="col-md-4 ">
+                      <div class="btn-success btn" onclick="double_check_click()">중복확인</div>
                   </div>
                 </div>
                 <!-- Textarea -->
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="article_content">내용</label>
+                    <label class="col-md-4 control-label" for="user_name">이름</label>
                     <div class="col-md-4">                     
-                      <textarea class="form-control" id="article_content" name="article_content"  style="resize: none;height: 300px;"></textarea>
+                      <input id="user_name" name="user_name" type="text" placeholder="이름을 입력하세요" class="form-control">
                     </div>
                   </div>   
                  <!-- Text input-->
                  <div class="form-group">
-                    <label class="col-md-4 control-label" for="article_author">작성자</label>  
+                    <label class="col-md-4 control-label" for="user_password">비밀번호</label>  
                     <div class="col-md-4">
-                    <input id="article_author" name="article_author" type="text" value="김정은"placeholder="작성자 이름을 입력하세요" class="form-control input-md">
+                    <input id="user_password" name="user_password" type="password" placeholder="비밀번호를 입력하세요" class="form-control input-md">
                       
                     </div>
                 </div>   
                 <!-- Text input-->
                 <div class="form-group">
-                <label class="col-md-4 control-label" for="article_password">비밀번호</label>  
+                <label class="col-md-4 control-label" for="user_password_confirm">비밀번호 확인</label>  
                 <div class="col-md-4">
-                <input id="article_password" name="article_password" type="password" placeholder="비밀번호를 입력하세요" class="form-control input-md">
+                <input id="user_password_confirm" name="user_password_confirm" type="password" placeholder="비밀번호를 한번 더 입력하세요" class="form-control input-md">
                     
                 </div>
             </div>           
 
-                <!-- <div class="form-group">
-                    <label class="col-md-4 control-label" for="source_image">파일</label>
-                    <div class="col-md-4">
-                      <input id="source_image" name="source_image" class="input-file" type="file">
-                    </div>
-                  </div>                
-                
-                <div class="form-group">
-                  <label class="col-md-4 control-label" for="article_snippet">Snippet</label>  
-                  <div class="col-md-4">
-                  <input id="article_snippet" name="article_snippet" type="text" placeholder="Article Snippet" class="form-control input-md">
-                    
-                  </div>
-                </div>
-                
-                <div class="form-group">
-                  <label class="col-md-4 control-label" for="article_date">Date</label>  
-                  <div class="col-md-4">
-                  <input id="article_date" name="article_date" type="text" placeholder="article date of publication " class="form-control input-md">
-                    
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-md-4 control-label" for="article_categories">Categories</label>
-                  <div class="col-md-4">
-                    <select id="article_categories" name="article_categories" class="form-control">
-                      <option value="1">Option one</option>
-                      <option value="2">Option two</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div class="form-group">
-                  <label class="col-md-4 control-label" for="source_tags">Tage</label>
-                  <div class="col-md-4">
-                    <select id="source_tags" name="source_tags" class="form-control">
-                      <option value="">Option one</option>
-                      <option value="">Option two</option>
-                    </select>
-                  </div>
-                </div> -->
                 <div class="text-right"> <!--You can add col-lg-12 if you want -->
-                    <input type="submit" class="btn-info btn" value="등록하기"></input>
+                    <input type="button" onclick="join();return false;" class="btn-info btn" value="회원가입">
                 </div>
             </form>
         </div>
     </div>
+{% include 'jquery.html' %}
+<script>
+
+function join() {
+
+  if(joinform_check()) {
+    var formData = $("form").serialize();
+    $.ajax({
+            cache: false,
+            url: "/join/user",
+            type: "post",
+            data: formData,
+            // async:false,
+            success: function (data) {
+              if(data.successed) {
+                location.replace('/login'); //이전페이지 X
+              }
+            },
+            error: function (xhr, status, error) {
+                alert("code : " + xhr.status + "\nmessage : " + xhr.responseText);
+            },
+        });
+
+  }
+
+};
+
+function joinform_check() {
+
+  var user_id = $("input[name='user_id']").val();
+  var user_name = $("input[name='user_name']").val();
+  var user_password = $("input:password[name='user_password']").val();
+  var user_password_confirm = $("input:password[name='user_password_confirm']").val();
+
+  if (user_id == "" || user_id == undefined) {
+
+    alert("아이디를 입력하세요.");
+    return false; 
+  };
+
+  if (user_id.length > 8) {
+
+    alert("아이디는 8자리까지만 입력 가능합니다.");
+    $("#user_id").val(user_id.substring(0,8));
+    return false;
+  };
+  var idRegExp = RegExp(/^[A-Za-z][A-Za-z0-9]+$/);
+
+  if (!idRegExp.test(user_id)) {
+    console.log(user_id);
+    console.log(!idRegExp.test(user_id));
+    alert("아이디는 영문 대소문자와 숫자만 입력 가능합니다.");
+    return false;
+  };
+
+  if (existed()) {
+
+    alert("중복된 아이디입니다.");
+    $("#user_id").val(user_id.substring(0,8));
+    return false;
+  }; 
+
+  if (user_name =="" || user_name == undefined) {
+    
+    alert("이름을 입력하세요.");
+    return false; 
+  };
+
+  if (user_name.length > 10) {
+    
+    alert("이름은 10자리까지만 입력 가능합니다.");
+    $("#user_name").val(user_name.substring(0,10));
+    return false; 
+  };
+
+  if (user_password == "" || user_password == undefined) {
+
+    alert("비밀번호를 입력하세요.");
+    return false;
+  };
+
+  if (user_password.length > 4) {
+
+    alert("비밀번호는 4자리까지만 입력 가능합니다.");
+    $("#user_password").val(user_password.substring(0,4));
+    return false;
+  };
+
+  if (user_password !== user_password_confirm) {
+    
+    alert("비밀번호가 일치하지 않습니다.");
+    $("#user_password").val("");
+    $("#user_password_confirm").val("");
+    return false;
+  }
+
+  return true;
+}
+
+function double_check_click() {
+
+  if(existed()){
+
+    alert("아이디가 이미 존재합니다.");
+    $("input[name='user_id']").val("");
+
+  } else { 
+
+    alert("사용 가능한 아이디입니다.");
+  }
+}
+
+function existed() {
+
+  var userId = $("input[name='user_id']").val();
+  var existed = false;
+  $.ajax({
+            url: "/check/exist/id",
+            type: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify({ userId: userId}),
+            dataType: "json",
+            async:false,
+            success: function (data) {
+              existed = data.existed;
+            },
+            error: function (xhr, status, error) {
+                alert("code : " + xhr.status + "\nmessage : " + xhr.responseText);
+            },
+    });
+  return existed;
+}
+  
+</script>
 </body>

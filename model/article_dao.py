@@ -16,7 +16,6 @@ def get_list():
                     SELECT * FROM ARTICLE
                     ORDER BY articleIdx desc;
                 """
-
         result = conn.execute(query)
     df_result = pd.DataFrame(
         result.fetchall(), columns=result.keys())
@@ -26,16 +25,11 @@ def get_list():
 
 
 def get_article(request):
-    article_Idx = request.args.get('articleIdx')
+    article_idx = request.args.get('articleIdx')
     engine = dbconn.mysql_engine()
     with engine.connect() as conn:
-
-        query = f"""
-                    SELECT * FROM ARTICLE
-                    WHERE articleIdx = {article_Idx} ;
-                """
-
-        result = conn.execute(query)
+        query = text('SELECT * FROM ARTICLE WHERE articleIdx = :article_idx;')
+        result = conn.execute(query, article_idx=article_idx)
     df_result = pd.DataFrame(
         result.fetchall(), columns=result.keys())
     article = df_result.to_dict('records')
@@ -55,11 +49,6 @@ def create_article(request):
     engine = dbconn.mysql_engine()
     with engine.connect() as conn:
 
-        # query = f"""
-        #             INSERT INTO ARTICLE(userId,title,content,password)
-        #             VALUES("{article['article_author']}", "{article['article_title']}", "{article['article_content']}","{article['article_password']}");
-        #         """
-        # result = conn.execute(query)
         query = text(
             'INSERT INTO ARTICLE(userId,title,content,password) VALUES(:userId, :title, :content,:password)')
         result = conn.execute(
@@ -69,16 +58,11 @@ def create_article(request):
 
 
 def delete_article(request):
-    article_Idx = request.args.get('articleIdx')
+    article_idx = request.args.get('articleIdx')
     engine = dbconn.mysql_engine()
     with engine.connect() as conn:
-
-        query = f"""
-                    DELETE FROM ARTICLE
-                    WHERE articleIdx = {article_Idx} ;
-                """
-
-        result = conn.execute(query)
+        query = text('DELETE FROM ARTICLE WHERE articleIdx = :article_idx ;')
+        result = conn.execute(query, article_idx=article_idx)
     is_successed = True if result.rowcount == 1 else False
 
     return is_successed
@@ -101,11 +85,6 @@ def update_article(request):
     engine = dbconn.mysql_engine()
     with engine.connect() as conn:
 
-        # query = f"""
-        #             UPDATE ARTICLE SET title = "{article['article_title']}", content = "{article['article_content']}", regDate="{curdate}"
-        #             WHERE articleIdx = {article['article_idx']};
-        #         """
-        # result = conn.execute(query)
         query = text(
             'UPDATE ARTICLE SET title=:title, content=:content, updateDate=:updateDate WHERE articleIdx=:articleIdx')
         result = conn.execute(
@@ -123,12 +102,9 @@ def check_password(request):
     engine = dbconn.mysql_engine()
     with engine.connect() as conn:
 
-        query = f"""
-                    SELECT * FROM ARTICLE
-                    WHERE articleIdx = {article_idx} ;
-                """
+        query = text(' SELECT * FROM ARTICLE WHERE articleIdx = :article_idx')
+        result = conn.execute(query, article_idx=article_idx)
 
-        result = conn.execute(query)
     df_result = pd.DataFrame(
         result.fetchall(), columns=result.keys())
     article = df_result.to_dict('records')

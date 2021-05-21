@@ -152,11 +152,7 @@
             </div>
          </div> ​
     </div>
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js" ></script>
-<script src="../static/js/bootstrap.min.js"></script>
+{% include 'jquery.html' %}
 <script>
 var content = {{article[0]['content']|tojson|safe}} ;
 // console.log(content);

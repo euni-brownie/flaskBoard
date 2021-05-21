@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template, url_for, redirect
+from flask.json import jsonify
 import model.article_dao as article_dao
+import model.user_dao as user_dao
 import json
 application = Flask(__name__)  # WSGI 실행 환경에 맞춰서 app 변수명 변경
 application.jinja_env.trim_blocks = True
@@ -12,13 +14,19 @@ def _hello():
 
 
 @application.route('/login')
-def _hellohtml():
+def _login():
     return render_template("login.html")
 
 
 @application.route('/join')
 def _join():
     return render_template("join.html")
+
+
+@application.route('/join/user', methods=['POST'])
+def _join_user():
+    successed = user_dao.create_user(request)
+    return jsonify(successed=successed)
 
 
 @application.route('/main')
@@ -68,6 +76,11 @@ def _delete():
 @ application.route('/check/password', methods=['POST'])
 def _check_password():
     return article_dao.check_password(request)
+
+
+@ application.route('/check/exist/id', methods=['POST'])
+def _check_exist_id():
+    return user_dao.check_exist_id(request)
 
 
 @ application.route('/method', methods=['GET', 'POST'])
