@@ -7,41 +7,66 @@
         </div>
         <div class="container join-container">
             <form class="form-horizontal" method="POST">
-                
+              {{form.csrf_token}}              
                 <!-- Form Name -->
                 <legend>회원가입</legend>
-                
-                
-                <!-- Text input-->
+
+                <!-- 아이디 -->
                 <div class="form-group has-btn">
-                  <label class="col-md-4 control-label" for="user_id">아이디</label>  
+                  <label class="col-md-4 control-label" for="user_id">{{ form.user_id.label }}</label>  
                   <div class="col-md-4">
-                  <input id="user_id" name="user_id" type="text" placeholder="아이디를 입력하세요" class="form-control " >
+                    {{ form.user_id(class="form-control", placeholder="아이디를 입력하세요") }}
+                    <!-- <input id="user_id" name="user_id" type="text" placeholder="아이디를 입력하세요" class="form-control " > -->
                   </div>
                   <div class="col-md-4 ">
                       <div class="btn-success btn" onclick="double_check_click()">중복확인</div>
                   </div>
                 </div>
-                <!-- Textarea -->
+                <!-- 이메일 -->
+                <div class="form-group has-btn">
+                  <label class="col-md-4 control-label" for="user_email">{{ form.user_email.label }}</label>
+                  <div class="col-md-4">
+                    {{ form.user_email(class="form-control", placeholder="이메일을 입력하세요") }}                     
+                    <!-- <input id="user_email" name="user_email" type="text" placeholder="이메일을 입력하세요" class="form-control"> -->
+                  </div>
+                  <div class="col-md-4 ">
+                    <div class="btn-danger btn" id="mail-send" onclick="mail_send()">인증메일</div>
+                </div>
+                </div>
+                <!-- 인증번호 -->
+                <div class="form-group has-btn form-verification" style="display: none;">
+                  <label class="col-md-4 control-label" for="user_verification">{{ form.user_verification.label }}</label>
+                  <div class="col-md-4">
+                    {{ form.user_verification(class="form-control", placeholder="인증번호를 입력하세요") }}                     
+                    <!-- <input id="user_verification" name="user_verification" type="text" placeholder="인증번호를 입력하세요" class="form-control"> -->
+                  </div>
+                  <div class="col-md-4 ">
+                    <div class="btn-danger btn" id="confirm" onclick="verification()">확인</div>
+                </div>
+                </div>
+                <!-- 이름 -->   
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="user_name">이름</label>
-                    <div class="col-md-4">                     
-                      <input id="user_name" name="user_name" type="text" placeholder="이름을 입력하세요" class="form-control">
+                    <label class="col-md-4 control-label" for="user_name">{{ form.user_name.label }}</label>
+                    <div class="col-md-4">
+                      {{ form.user_name(class="form-control", placeholder="이름을 입력하세요") }}                       
+                      <!-- <input id="user_name" name="user_name" type="text" placeholder="이름을 입력하세요" class="form-control"> -->
                     </div>
                   </div>   
-                 <!-- Text input-->
+                 <!-- 비밀번호 -->
                  <div class="form-group">
-                    <label class="col-md-4 control-label" for="user_password">비밀번호</label>  
+                    <label class="col-md-4 control-label" for="user_password">{{ form.user_password.label }}</label>  
                     <div class="col-md-4">
-                    <input id="user_password" name="user_password" type="password" placeholder="비밀번호를 입력하세요" class="form-control input-md">
+                      {{ form.user_password(class="form-control input-md", placeholder="비밀번호를 입력하세요") }}
+                    <!-- <input id="user_password" name="user_password" type="password" placeholder="비밀번호를 입력하세요" class="form-control input-md"> -->
                       
                     </div>
                 </div>   
-                <!-- Text input-->
+                <!-- 비밀번호 확인 -->
                 <div class="form-group">
-                <label class="col-md-4 control-label" for="user_password_confirm">비밀번호 확인</label>  
+                <label class="col-md-4 control-label" for="user_password_confirm">{{ form.user_password_confirm.label }}</label>  
                 <div class="col-md-4">
-                <input id="user_password_confirm" name="user_password_confirm" type="password" placeholder="비밀번호를 한번 더 입력하세요" class="form-control input-md">
+                  {{ form.user_password_confirm(class="form-control input-md", placeholder="비밀번호를 한번 더 입력하세요") }}
+                <!-- <input id="user_password_confirm" name="user_password_confirm" type="password" placeholder="비밀번호를 한번 더 입력하세요" class="form-control input-md"> -->
                     
                 </div>
             </div>           
@@ -49,12 +74,11 @@
                 <div class="text-right"> <!--You can add col-lg-12 if you want -->
                     <input type="button" onclick="join();return false;" class="btn-info btn" value="회원가입">
                 </div>
-            </form>
+            </form>      
         </div>
     </div>
 {% include 'jquery.html' %}
 <script>
-
 function join() {
 
   if(joinform_check()) {
@@ -68,13 +92,15 @@ function join() {
             success: function (data) {
               if(data.successed) {
                 location.replace('/login'); //이전페이지 X
+              } else {
+                var array = Object.values(data.error)
+                alert(data.error[1]);
               }
             },
             error: function (xhr, status, error) {
                 alert("code : " + xhr.status + "\nmessage : " + xhr.responseText);
             },
         });
-
   }
 
 };
@@ -82,6 +108,7 @@ function join() {
 function joinform_check() {
 
   var user_id = $("input[name='user_id']").val();
+  var user_email = $("input[name='user_email']").val();
   var user_name = $("input[name='user_name']").val();
   var user_password = $("input:password[name='user_password']").val();
   var user_password_confirm = $("input:password[name='user_password_confirm']").val();
@@ -99,6 +126,7 @@ function joinform_check() {
     return false;
   };
   var idRegExp = RegExp(/^[A-Za-z][A-Za-z0-9]+$/);
+  var emailRegExp = RegExp(/[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]$/i);
 
   if (!idRegExp.test(user_id)) {
     console.log(user_id);
@@ -113,6 +141,27 @@ function joinform_check() {
     $("#user_id").val(user_id.substring(0,8));
     return false;
   }; 
+
+ if (!idRegExp.test(user_id)) {
+
+    alert("아이디는 영문 대소문자와 숫자만 입력 가능합니다.");
+    return false;
+  };  
+
+  if (user_email == "" || user_email == undefined) {
+
+    alert("이메일을 입력하세요.");
+    return false; 
+  };
+
+  if (!emailRegExp.test(user_email)) {
+
+    console.log(!emailRegExp.test(user_email));
+    alert("잘못된 이메일 형식입니다.");
+    return false;
+  };
+
+
 
   if (user_name =="" || user_name == undefined) {
     
@@ -147,7 +196,7 @@ function joinform_check() {
     $("#user_password_confirm").val("");
     return false;
   }
-
+  
   return true;
 }
 
@@ -162,6 +211,74 @@ function double_check_click() {
 
     alert("사용 가능한 아이디입니다.");
   }
+}
+
+function mail_send() {
+
+  var user_email = $("input[name='user_email']").val();
+  var emailRegExp = RegExp(/[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]$/i);
+  
+  if( !emailRegExp.test(user_email)) {
+    console.log(user_email);
+    console.log(!emailRegExp.test(user_email));
+    alert("잘못된 이메일 형식입니다.");
+    return false;
+  }
+
+  $.ajax({
+            url: "/send/authmail",
+            type: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify({ userEmail: user_email}),
+            dataType: "json",
+            async:false,
+            success: function (data) {
+              success = data.success;
+              alert("인증메일이 발송되었습니다. 인증번호를 입력해주세요.");
+              $(".form-verification").css("display", "block");
+              $("#mail-send").text("재전송");
+                //3분 제한도 보여주기
+            },
+            error: function (xhr, status, error) {
+                alert("code : " + xhr.status + "\nmessage : " + xhr.responseText);
+            },
+    });
+
+}
+
+function verification() {
+
+  var user_auth_code = $("#user_verification").val()
+
+  $.ajax({
+            url: "/check/authcode",
+            type: "post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify({ user_auth_code : user_auth_code}),
+            dataType: "json",
+            async:false,
+            success: function (data) {
+              result = data.result;
+              if( result == "success") {
+
+                alert("인증되었습니다.")
+                $(".form-verification input").attr("readonly",true)
+                $("#confirm").css("display", "none")
+
+              } else {
+                alert(result);
+              }
+            },
+            error: function (xhr, status, error) {
+                alert("code : " + xhr.status + "\nmessage : " + xhr.responseText);
+            },
+    });
+
+
 }
 
 function existed() {

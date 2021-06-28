@@ -1,15 +1,21 @@
 {% include 'head.html' %}
 <body>
+<script>
+  if(!{{session.get('logined') | tojson | safe}}) {
+    location.href = "/login"
+}  
+</script>
     <div class="wrapper">
+      {% include 'navbar.html' %}
+      <!--
         <div class="row ">
             <div class="col-12">
                 <h1 class="title"><a href="/main">김정은님의 게시판 </a></h1>
             </div>
-            
-        </div>
+        </div>-->
         <div class="container">
-            <form class="form-horizontal" method="POST" action="/create">
-                
+            <form class="form-horizontal" method="POST" action="/create"  enctype="multipart/form-data" >
+                <input id="article_id" name="article_id" type="hidden" value="">
                 <!-- Form Name -->
                 <legend>글쓰기</legend>
                 
@@ -32,27 +38,20 @@
                  <div class="form-group">
                     <label class="col-md-4 control-label" for="article_author">작성자</label>  
                     <div class="col-md-4">
-                    <input id="article_author" name="article_author" type="text" value="김정은"placeholder="작성자 이름을 입력하세요" class="form-control input-md">
+                    <input id="article_author" name="article_author" type="text" value="{{session.get('name')}}"placeholder="작성자 이름을 입력하세요" class="form-control input-md" readonly>
                       
                     </div>
                 </div>   
-                <!-- Text input-->
-                <div class="form-group">
-                <label class="col-md-4 control-label" for="article_password">비밀번호</label>  
-                <div class="col-md-4">
-                <input id="article_password" name="article_password" type="password" placeholder="비밀번호를 입력하세요" class="form-control input-md">
-                    
-                </div>
-            </div>           
 
-                <!-- <div class="form-group">
-                    <label class="col-md-4 control-label" for="source_image">파일</label>
-                    <div class="col-md-4">
-                      <input id="source_image" name="source_image" class="input-file" type="file">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="article_file">파일</label>
+                    <div class="col-md-4 file-input">
+                      <input id="article_file" class="input-file" type="file" name="article_file">
+                      <span style="font-size:small;color:red;">jpg, png, gif 파일만 등록 가능합니다 </span>
                     </div>
                   </div>                
                 
-                <div class="form-group">
+                  <!-- <div class="form-group">
                   <label class="col-md-4 control-label" for="article_snippet">Snippet</label>  
                   <div class="col-md-4">
                   <input id="article_snippet" name="article_snippet" type="text" placeholder="Article Snippet" class="form-control input-md">
@@ -102,11 +101,28 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js" ></script>
 <script src="../static/js/bootstrap.min.js"></script>
 <script>
-
+var user_id =  {{session.get('userId')|tojson|safe}};
 $("form").submit(function(e) {
     var result = $("#article_content").val().replace(/(\n|\r\n)/g, '<br>');
     $("#article_content").val(result);
-    // alert("등록완료되었습니다");
+    $("#article_id").val(user_id);
+    
+    var file = $('#article_file')[0].files[0];
+    var parsingArr = file.name.split(".");
+    var type = parsingArr[parsingArr.length-1];
+    var UPLOAD_EXTENSIONS =  ['jpg', 'png', 'gif']
+    console.log(file);
+    console.log(type);
+    if(file.size /1024 /1024 > 10 ) { // 10MB
+      alert("파일이 10MB를 초과했습니다.")
+      return false;
+    }
+
+    if(!UPLOAD_EXTENSIONS.includes(type)) {
+      alert("파일 확장자가 일치하지 않습니다.")
+      return false;   
+    }
+
     return true;
 });
 

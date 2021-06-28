@@ -1,40 +1,34 @@
 {% include 'head.html' %}
 <body>
 <script>
+if(!{{session.get('logined') | tojson | safe}}) {
+    location.href = "/login"
+}  
     var result = {{request.args.get('updated')|tojson|safe}};
+    
     if(result!=null) {
         if(result=="True") {
             alert("수정되었습니다");
         } 
     }
     var articleIdx = {{article[0]['articleIdx']|tojson|safe}};
-    // var targetPw = {{article[0]['password']|tojson|safe}};
 
     function delete_article() {
         var isTrue = confirm("삭제하시겠습니까?");
         if(isTrue) {
-            if(check_password()) {
-             
-                location.href = "/delete?articleIdx="+articleIdx;
-
-            } else {
-
-                alert("비밀번호가 잘못되었습니다.");
-                $("input:password[name='article_password']").val("");
-            }
-        }
+            location.href = "/delete?articleIdx="+articleIdx;
+          }
     }
 
     function update_article() {
 
-        if(check_password()) {
-            location.href = "/edit?articleIdx="+articleIdx;
-        }else {
-            alert("비밀번호가 잘못되었습니다.");
-            $("input:password[name='article_password']").val("");
-        }
-            
+        location.href = "/edit?articleIdx="+articleIdx;    
       }
+      
+    function reply_article() {
+
+      location.href = "/reply?articleIdx="+articleIdx;    
+    }
 
     function check_password() {
 
@@ -60,12 +54,12 @@
     }
 </script>
     <div class="wrapper">
-        <div class="row ">
+      {% include 'navbar.html' %}
+        <!-- <div class="row ">
             <div class="col-12">
                 <h1 class="title"><a href="/main">김정은님의 게시판 </a></h1>
             </div>
-            
-        </div>
+        </div> -->
         <div class="container">
             <div class="read-inline">    
                 <!-- Form Name -->
@@ -81,7 +75,7 @@
                 <div class="row read-group">
                     <label class="col-md-1">작성자</label>  
                     <div class="col-md-11 read">
-                        {{article[0]['userId']}}
+                        {{article[0]['name']}}
                     </div>
                 </div>   
                 <div class="row read-group">
@@ -95,13 +89,25 @@
                     <div class="col-md-12">                     
                       <div class="form-control mb-5 article_content" style="resize: none;height: 300px;">{{article[0]['content']}}</div>
                     </div>
-                </div>   
+                </div>
                 <div class="row read-group">
+                  <label class="col-md-1">파일</label>  
+                  <div class="col-md-11 read">
+                    {% if article[0]['fileName'] is not none %}                        
+                    <a href="/file/download?file_name={{article[0]['fileName']}}&file_path={{article[0]['filePath']}}">
+                      {{article[0]['fileName']}}
+                    </a>
+                    {% else %}
+                    파일없음
+                    {% endif %}
+                  </div>
+              </div>       
+                <!-- <div class="row read-group">
                     <label class="col-md-1 read-password">비밀번호</label>  
                     <div class="col-md-11 read">
                      <input id="article_password" name="article_password" type="password" placeholder="비밀번호" class="form-control input-md" style="width: 100px;">
                     </div>
-                </div>           
+                </div>            -->
 
                 <!-- <div class="form-group">
                     <label class="col-md-4 control-label" for="source_image">파일</label>
@@ -145,10 +151,13 @@
                     </select>
                   </div>
                 </div> -->
-                <div class="text-right"> <!--You can add col-lg-12 if you want -->
+                <div class="text-right user-update-button">
+                {% if same_user is true %}
                     <div class="btn-info btn" onclick="update_article()">수정하기</div>
                     <div class="btn-danger btn delete-btn" onclick="delete_article()">삭제하기</div>
-                </div>
+                {% endif %}
+                    <div class="btn-success btn" onclick="reply_article()">답글달기</div>
+              </div>
             </div>
          </div> ​
     </div>
@@ -158,6 +167,7 @@ var content = {{article[0]['content']|tojson|safe}} ;
 // console.log(content);
 // var formatted = "<pre>"+String(content).replace(/(<br>|<br\/>|<br \/>|&lt;br&gt;)/g, '\r\n')+"</pre> ";
 var formatted = "<pre>"+content+"</pre> ";
-$(".article_content").html(formatted);  
+$(".article_content").html(formatted);
+
 </script>
 </body>

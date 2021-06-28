@@ -6,21 +6,25 @@ if(result!=null){
     if(result!="True"){
         alert("내용을 확인하세요!");
     } 
-}    
+}
 </script>
     <div class="wrapper">
+      {% include 'navbar.html' %}
+      <!--
         <div class="row ">
             <div class="col-12">
                 <h1 class="title"><a href="/main">김정은님의 게시판 </a></h1>
             </div>
-            
-        </div>
+        </div>-->
         <div class="container">
-            <form class="form-horizontal" method="POST" action="/update">
+            <form class="form-horizontal" method="POST" action="/update" enctype="multipart/form-data">
                 
                 <!-- Form Name -->
                 <legend>글쓰기</legend>
                 <input type="hidden" id="article_idx" name="article_idx" value="{{article[0]['articleIdx']}}">
+                <input type="hidden" id="prev_file_name" name="prev_file_name" value="{{article[0]['fileName']}}">
+                <input type="hidden" id="prev_file_path" name="prev_file_path" value="{{article[0]['filePath']}}">
+                <input type="hidden" id="file_updated" name="file_updated" value="false">
                 <!-- Text input-->
                 <div class="form-group">
                   <label class="col-md-4 control-label" for="article_title">제목</label>  
@@ -32,25 +36,38 @@ if(result!=null){
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="article_content">내용</label>
                     <div class="col-md-4">                     
-                      <textarea class="form-control" id="article_content" name="article_content" value="{{article[0]['title']|tojson|safe}}" style="resize: none;height: 300px;"></textarea>
+                      <textarea class="form-control" id="article_content" name="article_content" value= "{{article[0]['content']|tojson|safe}}" style="resize: none;height: 300px;"></textarea>
                     </div>
                   </div>   
                  <!-- Text input-->
                  <div class="form-group">
                     <label class="col-md-4 control-label" for="article_author">작성자</label>  
                     <div class="col-md-4">
-                    <input id="article_author" name="article_author" type="text" value="{{article[0]['userId']}}"placeholder="작성자 이름을 입력하세요" class="form-control input-md" readonly>
+                    <input id="article_author" name="article_author" type="text" value="{{article[0]['name']}}"placeholder="작성자 이름을 입력하세요" class="form-control input-md" readonly>
                       
                     </div>
                 </div>   
                 <!-- Text input-->
+                
+                <!-- <div class="form-group">
+                  <label class="col-md-4 control-label" for="article_password">비밀번호</label>  
+                  <div class="col-md-4">
+                  <input id="article_password" name="article_password" type="password" placeholder="비밀번호를 입력하세요" class="form-control input-md">
+                  </div>
+                </div>   -->        
+
                 <div class="form-group">
-                <label class="col-md-4 control-label" for="article_password">비밀번호</label>  
-                <div class="col-md-4">
-                <input id="article_password" name="article_password" type="password" placeholder="비밀번호를 입력하세요" class="form-control input-md">
-                    
-                </div>
-            </div>           
+                    <label class="col-md-4 control-label" for="article_file">파일</label>
+                    <div class="col-md-4 file-input">
+                      <div class="col-md-11 update-name">
+                        {% if article[0]['fileName'] is not none %}                        
+                          {{article[0]['fileName']}}
+                        {% else %}
+                        <p class="update-name-p"></p>파일없음</p>
+                        {% endif %}
+                      <input id="article_file" class="input-file update-name-input" type="file" name="article_file">
+                    </div>
+                  </div>  
 
                 <!-- <div class="form-group">
                     <label class="col-md-4 control-label" for="source_image">파일</label>
@@ -105,31 +122,26 @@ if(result!=null){
     </div>
 {% include 'jquery.html' %}
 <script>
-// var targetPw = {{article[0]['password']|tojson|safe}};
 var content = {{article[0]['content']|tojson|safe}};
 var articleIdx = {{article[0]['articleIdx']|tojson|safe}};
-// var formatted = String(content).replace(/(<br>|<br\/>|<br \/>|&lt;br&gt;)/g, '\r\n');
-// $("#article_content").val(formatted);  
-
+var fileName = {{article[0]['fileName']|tojson|safe}};
+var formatted = String(content).replace(/(<br>|<br\/>|<br \/>|&lt;br&gt;)/g, '\r\n');
+$("#article_content").val(formatted);  
+console.log()
 $("form").submit(function(e) {
 
     var isTrue = confirm("수정하시겠습니까?");
         if(isTrue) {
-            
-            if(check_password()) {
 
                 var result = $("#article_content").val().replace(/(\n|\r\n)/g, '<br>');
                 $("#article_content").val(result);
+                if(fileName) { //기존 파일 존재시 file_updated true
+
+                  $("input[name='file_updated']").val("true")
+                }
+                
                 // alert("수정되었습니다");
                 return true;
-
-            }else {
-                
-                alert("비밀번호가 잘못되었습니다.");
-                $("input:password[name='article_password']").val("");
-                return false;
-            }
-
         }
 
 });

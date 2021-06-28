@@ -1,9 +1,9 @@
 {% include 'head.html' %}
 <body>
 <script>
-        var updated = {{request.args.get('updated')|tojson|safe}};
-        var created = {{request.args.get('created')|tojson|safe}};
-        // var deleted = {{request.args.get('deleted')|tojson|safe}};
+var updated = {{request.args.get('updated')|tojson|safe}};
+var created = {{request.args.get('created')|tojson|safe}};
+// var deleted = {{request.args.get('deleted')|tojson|safe}};
 if(updated!=null) {
     if(updated=="True") {
         alert("수정되었습니다");
@@ -12,41 +12,74 @@ if(updated!=null) {
 if(created!=null) {
     if(created=="True") {
         alert("등록완료되었습니다");
-    } 
+    } else {
+        alert("등록을 실패했습니다")
+    }
 }
 
 </script>
     <div class="wrapper">
+        {% include 'navbar.html' %}
+        <!--
         <div class="row ">
             <div class="col-12">
-                <h1 class="title"><a href="/main">김정은님의 게시판 </a></h1>
+                <h1 class="title col-6"><a href="/main">김정은님의 게시판 </a></h1>
+            </div>
+        </div>-->
+        
+        <div class="container">
+            <div class="search-menu text-right">
+                <div class="row col-md-2" style="width:120px;">
+                    <div class="form-group text-center">
+                        <select class="form-control" name="article-search-menu" id="article-search-menu">
+                            <option value="0" selected>제목</option>
+                            <option value="1">내용</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row col-md-4">
+                    <div class="input-group" style="width:200px;">
+                        <input type="text" class="form-control" placeholder="" id="keyword" name="keyword" style="height: 34px;" value={{keyword|tojson|safe}}>
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="filter-btn"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>                
+                </div>
             </div>
             
-        </div>
-        <div class="container">
             <div class="row col-md-12 custyle">
             <table class="table table-striped custab mb-0 table-hover">
                 <thead>
                     <tr>
-                        <th class="text-center">NO</th>
-                        <th class="text-center">제목</th>
-                        <th class="text-center">작성자</th>
-                        <th class="text-center">작성일</th>
+                        <th style="width: 10%; text-align: center" class="text-center">NO</th>
+                        <th style="width: 30%; text-align: center" class="text-center">제목</th>
+                        <th style="width: 20%; text-align: center" class="text-center">작성자</th>
+                        <th style="width: 15%; text-align: center" class="text-center">파일</th>
+                        <th style="width: 25%; text-align: center" class="text-center">작성일</th>
                         <!-- <th class="text-center">Action</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     {% if article_list %} {% for result in article_list %}
                     <tr>
-                        <td class="text-center">{{ loop.revindex}}</td>
-                        <td class="text-center"><a href="/article?articleIdx={{result['articleIdx']}}">{{result['title']}}</a></td>
-                        <td class="text-center">{{result['userId']}}</td>
+                        <td class="text-center">{{paging_value.total_rows - (paging_value.get_start_row() + loop.index ) + 1 }}</td>
+                        <td class="text-center">
+                            <span class="reply"><i class="fa fa-replyd"></i></span>
+                            <a href="/article?articleIdx={{result['articleIdx']}}">{{result['title']}}</a></td>
+                        <td class="text-center">{{result['name']}}</td>
+                        <td class="text-center" >
+                        {% if result['fileName'] is not none %}                        
+                            <a href="/file/download?file_name={{result['fileName'] |string}}&file_path={{result['filePath'] |string}}">
+                                <span style="color: #aaa;"><i class="fa fa-download fa-lg" ></i></span>
+                            </a>
+                        </td>
+                        {% endif %}
                         <td class="text-center">{{result['regDate']}}</td>
                         <!-- <td class="text-center"><a class='btn btn-info btn-xs' href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a> <a href="#" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span> Del</a></td> -->
                     </tr>
                     {% endfor %}{% else %}
                     <tr>
-                        <td colspan="4" class="text-center" align="center">조회할 DATA가 없습니다</td>
+                        <td colspan="5" class="text-center" align="center">조회할 DATA가 없습니다</td>
                     </tr>
                     {% endif %}
                 </tbody>
@@ -57,11 +90,60 @@ if(created!=null) {
         </div>
         </div>
         <div class="paging">
-    
+            <div class="row mb-4">
+                <div class="col-sm-12 text-center">
+                    <div class="float-sm-right">
+                        <ul class="pagination pagination-rounded mb-sm-0">
+                            <!-- 이전페이지 -->
+                            <li class="page-item">
+                                <a href="?page={{ paging_value.previous_page.index }}&filter={{filter}}&keyword={{keyword}}"
+                                    class="page-link"><i class="fa fa-chevron-left"></i></a>
+                            </li>
+
+                            {% for n in paging_value.pages %}
+                            {% if current_index %}
+                                {% if current_index != n.index %}
+                                <li class="page-item">
+                                    <a href="?page={{n.index}}&filter={{filter}}&keyword={{keyword}}"
+                                        class="page-link">{{n.index}}</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item active">
+                                    <a href="#" class="page-link">{{n.index}}</a>
+                                </li>
+                            {% endif %}
+                            {% else %}
+                            <li class="disabled">
+                                <a href="#" class="page-link">...</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            <!-- 다음페이지 -->
+
+                            <li class="page-item">
+                                <a href="?page={{ paging_value.next_page.index}}&filter={{filter}}&keyword={{keyword}}"
+                                    class="page-link"><i class="fa fa-chevron-right"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
    
 
 {% include 'jquery.html' %}
+<script>
+var curpage =  {{paging_value.current_index|tojson|safe}};
+    $('#filter-btn').click(function () {
+
+        var keyword =  $("#keyword").val();
+        var filter = $("#article-search-menu option:selected").val();
+
+        self.location.href ="?page=1" + "&filter=" + filter + "&keyword=" + encodeURI(keyword);
+
+
+    });
+</script>
 </body>
 </html>

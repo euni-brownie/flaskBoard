@@ -149,3 +149,43 @@ padding-top: 20px;
 .label-sasveid{
 	padding: 0px 20px;
 }
+
+.navbar-inverse {
+    background-color: #ffffff !important;
+    /* background-color: #e3e4fa !important; */
+	border-color : #ffffff !important;
+}
+
+.navbar-inverse .navbar-brand {
+    color: #333 !important; /*9d9d9d*/
+}
+.navbar-inverse .navbar-nav>li>a {
+    color: #333 !important;
+}
+
+.navbar-inverse .navbar-brand:hover {
+    color: #9d9d9d !important; /*9d9d9d*/
+}
+.navbar-inverse .navbar-nav>li>a:hover{
+    color: #9d9d9d !important;
+}
+/********************************
+글쓰기
+********************************/
+.file-input {
+	margin: 8px;
+}
+
+.update-name{
+	margin : 0 0 5px 0;
+}
+
+.update-name-input{
+	margin : 10px;
+}
+
+.input-group .form-control {
+	font-size: 14px !important;
+}
+.btn .mdi:before {
+	margin-top: -1px; }

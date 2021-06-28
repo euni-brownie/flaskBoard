@@ -1,0 +1,102 @@
+{% include 'head.html' %}
+<body>
+<script>
+var result = {{request.args.get('updated')|tojson|safe}};
+if(result!=null){
+    if(result!="True"){
+        alert("내용을 확인하세요!");
+    } 
+}
+</script>
+    <div class="wrapper">
+      {% include 'navbar.html' %}
+      <!--
+        <div class="row ">
+            <div class="col-12">
+                <h1 class="title"><a href="/main">김정은님의 게시판 </a></h1>
+            </div>
+        </div>-->
+        <div class="container">
+            <form class="form-horizontal" method="POST" action="create/reply" enctype="multipart/form-data">
+                
+                <!-- Form Name -->
+                <legend>글쓰기</legend>
+                <input type="hidden" id="article_id" name="article_id" value="{{article[0]['articleId']}}">
+                <input type="hidden" id="article_idx" name="article_idx" value="{{article[0]['articleIdx']}}">
+                <input type="hidden" id="article_indent" name="article_indent" value="{{article[0]['indent']}}">
+                <input type="hidden" id="article_ref" name="article_ref" value="{{article[0]['ref']}}">
+                <input type="hidden" id="article_step" name="article_step" value="{{article[0]['step']}}">
+                <!-- Text input-->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="article_title">제목</label>  
+                  <div class="col-md-4">
+                  <input id="article_title" name="article_title" type="text" value="[RE] {{article[0]['title']}}" class="form-control ">
+                  </div>
+                </div>
+                <!-- Textarea -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="article_content">내용</label>
+                    <div class="col-md-4">                     
+                      <textarea class="form-control" id="article_content" name="article_content" value= "" placeholder="내용을 입력하세요" style="resize: none;height: 300px;"></textarea>
+                    </div>
+                  </div>   
+                 <!-- Text input-->
+                 <div class="form-group">
+                    <label class="col-md-4 control-label" for="article_author">작성자</label>  
+                    <div class="col-md-4">
+                    <input id="article_author" name="article_author" type="text" value="{{article[0]['name']}}"placeholder="작성자 이름을 입력하세요" class="form-control input-md" readonly>
+                      
+                    </div>
+                </div>   
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="article_file">파일</label>
+                    <div class="col-md-4 file-input">
+                      <input id="article_file" class="input-file" type="file" name="article_file">
+                      <span style="font-size:small;color:red;">jpg, png, gif 파일만 등록 가능합니다 </span>
+                    </div>
+                  </div>      
+                <div class="text-right"> <!--You can add col-lg-12 if you want -->
+                    <input type="submit" class="btn-info btn" value="등록하기">
+                </div>
+            </form>
+        </div>
+
+         
+         ​
+    </div>
+{% include 'jquery.html' %}
+<script>
+var content = {{article[0]['content']|tojson|safe}};
+var articleIdx = {{article[0]['articleIdx']|tojson|safe}};
+var fileName = {{article[0]['fileName']|tojson|safe}};
+
+$("form").submit(function(e) {
+    var user_id =  {{session.get('userId')|tojson|safe}};
+    var result = $("#article_content").val().replace(/(\n|\r\n)/g, '<br>');
+    $("#article_content").val(result);
+    $("#article_id").attr("value", user_id);
+    $("#article_indent").attr("value", {{article[0]['indent']|tojson|safe}});
+    $("#article_ref").attr("value", {{article[0]['ref']|tojson|safe}});
+    $("#article_step").attr("value", {{article[0]['step']|tojson|safe}});
+    
+    var file = $('#article_file')[0].files[0];
+    var parsingArr = file.name.split(".");
+    var type = parsingArr[parsingArr.length-1];
+    var UPLOAD_EXTENSIONS =  ['jpg', 'png', 'gif']
+    console.log(file);
+    console.log(type);
+    if(file.size /1024 /1024 > 10 ) { // 10MB
+      alert("파일이 10MB를 초과했습니다.")
+      return false;
+    }
+
+    if(!UPLOAD_EXTENSIONS.includes(type)) {
+      alert("파일 확장자가 일치하지 않습니다.")
+      return false;   
+    }
+
+    return true;
+});
+
+</script>
+</body>

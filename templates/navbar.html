@@ -1,0 +1,15 @@
+<div class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+    <a href="/main" class="navbar-brand">김정은님의 게시판</a>
+    <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse"></button>
+    <div class="collapse navbar-collapse navHeaderCollapse">
+        <ul class="nav navbar-nav navbar-right">
+        {% if session.get('name') is not none %}
+        <li class=><a href="/logout">{{session.get('name')}}님 로그아웃</a></li>
+        {% else %}
+        <li class=><a href="/login">로그인</a></li>
+        {% endif %}
+        </ul>
+    </div>
+    </div>
+</div>

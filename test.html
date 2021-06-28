@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, maximun-scale=1, user-scalable=no'>
+        <link href='https://fonts.googleapis.com/css?family=Dosis:300|Nanum+Gothic:400,700,800'' rel='stylesheet'>
+        <title></title> 
+    </head> 
+    <body> 
+        <table cellpadding=0 cellspacing=0 border=0 width=100% height=100% style='font-family: Nanum Gothic, sans-serif;font-size:14px;color:#161616;'> 
+            <tr> 
+            <td style='height:100px;border-bottom:2px solid black;text-align:center;vertical-align: bottom;padding-bottom:10px;'><img src='" + logoImgUrl + "' alt='게시판 로고 이미지'></td> 
+            </tr> 
+            <tr><td style='height:40px;'>&nbsp;</td></tr> 
+            <tr> 
+            <td style='padding-left: 30px;line-height: 170%;'> 
+                안녕하세요 김정은님의 게시판입니다.<br><br> 
+    
+                회원가입을 위해 이메일 주소 인증을 요청하셨습니다.<br> 
+                본인이 요청한 내용이 아닐경우 본 메일을 삭제해주시기 바랍니다.<br><br> 
+            </td> 
+            </tr> 
+            <tr> 
+            <td style='padding-left: 30px;padding-right: 30px; font-weight: bold;'> 
+                <p style='padding:20px;background:#f6f6f6; '> 
+                이메일계정<br><br> 
+                    {user_email}
+                </p><br> 
+            </td> 
+            </tr> 
+            <tr> 
+            <td style='padding-left: 30px;padding-right: 30px;line-height: 170%;'> 
+                아래의 [ 인증번호 ]를 입력하여 인증을 완료하시면, 해당 서비스를 이용하실 수 있습니다.<br> 
+                (본 메일은 수신 후 3분간 유효하며, 3분이 지난경우 인증메일을 다시 요청하셔야 합니다 )<br><br>
+            </td> 
+            </tr> 
+            <tr> 
+            <td style='text-align:center;'> 
+                <button style=" background-color: #555555;border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;margin: 4px 2px;" alt='이메일 인증 버튼'>
+                {session['auth_code']}
+            </td><br><br><br><br> 
+            </tr> 
+            <tr><td></td></tr> 
+        </table> 
+    </body> 
+</html> 
