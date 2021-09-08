@@ -21,8 +21,7 @@ def get_list():
     keyword = "%" + str(request.args.get("keyword", default="")) + "%"
 
     condition_str = (
-        "and title LIKE :keyword" if (
-            filter == "0") else "and content LIKE :keyword"
+        "and title LIKE :keyword" if (filter == "0") else "and content LIKE :keyword"
     )
     condition_str = condition_str if (keyword != "") else ""
 
@@ -45,15 +44,15 @@ def get_list():
     # condition_str 각 쿼리에 추가하기
     select_query = (
         """
-                        SELECT t.articleIdx AS articleIdx, t.userId AS userId, t.name AS name, t.title AS title, t.content AS content, t.regDate AS regDate , f.name AS fileName, f.path AS filePath
+                        SELECT t.articleIdx AS articleIdx, t.userId AS userId, t.name AS name, t.title AS title, t.content AS content, t.hit AS hit, t.ref AS ref, t.indent AS indent, t.step AS step, t.regDate AS regDate , f.name AS fileName, f.path AS filePath
                         FROM 
-                        (SELECT a.articleIdx AS articleIdx, a.userId AS userId, u.name AS name, a.title AS title, a.content AS content, a.regDate AS regDate 
+                        (SELECT a.articleIdx AS articleIdx, a.userId AS userId, u.name AS name, a.title AS title, a.content AS content, a.regDate AS regDate , a.hit AS hit, a.ref AS ref, a.indent AS indent, a.step AS step
                         FROM ARTICLE a, USER u
                         WHERE a.userId LIKE u.userId
                     """
         + condition_str
         + """
-                        ORDER BY articleIdx desc
+                        ORDER BY a.ref DESC, a.step ASC
                         limit :limit_num, :page_size
                         ) t
                         LEFT OUTER JOIN file f
@@ -364,8 +363,8 @@ def reply_article(request):
             title=article["article_title"],
             content=article["article_content"],
             ref=article["article_ref"],
-            indent=int(article["article_indent"])+1,
-            step=int(article["article_step"])+1,
+            indent=int(article["article_indent"]) + 1,
+            step=int(article["article_step"]) + 1,
         )
         article_success = True if article_result.rowcount == 1 else False
         created_idx = conn.execute("SELECT LAST_INSERT_ID() AS id").fetchone()
@@ -427,4 +426,7 @@ def update_article_step(origin_article):
     engine = dbconn.mysql_engine()
     with engine.connect() as conn:
         result = conn.execute(
-            text(update_txt), ref=origin_article['article_ref'], step=origin_article['article_step'])
+            text(update_txt),
+            ref=origin_article["article_ref"],
+            step=origin_article["article_step"],
+        )

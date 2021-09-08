@@ -12,6 +12,44 @@ import platform
 import paging
 
 
+def check_exist_liked(request):
+    data = request.get_json()
+    engine = dbconn.mysql_engine()
+    with engine.connect() as conn:
+        query = text(
+            "INSERT INTO LIKED(userId, articleIdx) VALUES (:userId, :articleIdx)"
+        )
+        result = conn.execute(
+            query,
+            userId=session.get("userId"),
+            articleIdx=data["article_idx"],
+        )
+        success = True if result.rowcount == 1 else False
+
+    return jsonify(success=success)
+
+# check_exist_liked
+
+
+def add_liked_for_article_by_user(request):
+    data = request.get_json()
+    engine = dbconn.mysql_engine()
+    with engine.connect() as conn:
+        query = text(
+            "SELECT count(*) as count FROM LIKED WHERE userid LIKE :userId AND articleIdx = :articleIdx"
+        )
+        result = conn.execute(
+            query,
+            userId=session.get("userId"),
+            articleIdx=data["article_idx"],
+        )
+        df_result = pd.DataFrame(result.fetchall(), columns=result.keys())
+        count = df_result.to_dict("records")
+        success = True if count[0]['count'] > 0 else False
+
+    return jsonify(success=success)
+
+
 def create_comment(request):
     data = request.get_json()
     engine = dbconn.mysql_engine()

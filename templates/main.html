@@ -63,8 +63,17 @@ if(created!=null) {
                     {% if article_list %} {% for result in article_list %}
                     <tr>
                         <td class="text-center">{{paging_value.total_rows - (paging_value.get_start_row() + loop.index ) + 1 }}</td>
-                        <td class="text-center">
-                            <span class="reply"><i class="fa fa-replyd"></i></span>
+                        <td class="text-left">
+                            {% if result['indent'] !=0 %}
+                            {% for i in range(result['indent'])%}
+                            &nbsp;&nbsp;&nbsp;
+                            {% endfor%}
+                            {% for i in range(result['indent'])%}
+                            <span class="reply" style="font-size:8px; color: Dodgerblue;">RE:</i></span>
+                            {% endfor%}
+                            {% endif %}
+                            <span class="good" style="font-size:8px; color: red;"><i class="fa fa-heart"></i></span>
+                            <span class="good" style="font-size:8px; color: red;">12</i></span>
                             <a href="/article?articleIdx={{result['articleIdx']}}">{{result['title']}}</a></td>
                         <td class="text-center">{{result['name']}}</td>
                         <td class="text-center" >

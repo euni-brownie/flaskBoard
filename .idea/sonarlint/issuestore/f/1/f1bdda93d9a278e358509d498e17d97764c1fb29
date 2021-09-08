@@ -1,0 +1,7 @@
+
+apython:S5797"HReplace this expression; used as a condition it will always be constant.(´ì±²
+Gpython:S1481a"0Remove the unused local variable "is_successed".(Í…®i
+lpython:S37765"TRefactor this function to reduce its Cognitive Complexity from 28 to the 15 allowed.(ù³ğ
+;python:S125E"Remove this commented out code.(·˜âÎøÿÿÿÿ
+{python:S117‹"^Rename this local variable "errorMessages" to match the regular expression ^[_a-z][a-z0-9_]*$.(ø°óùÿÿÿÿ
+Ipython:S5806"+Rename this variable; it shadows a builtin.(ñéÕ—úÿÿÿÿ

@@ -159,7 +159,36 @@ if(!{{session.get('logined') | tojson | safe}}) {
                     <div class="btn-success btn" onclick="reply_article()">답글달기</div>
               </div>
             </div>
-         </div> ​
+            <h2 class="page-header" style="font-size: 20px;">Comments</h2>
+            
+              {% if comments %} {% for result in comments %}
+              <div class="media comment-box">
+                <div class="media-body">
+                  <h4 class="media-heading">
+                    {{result['name']}}
+                    <span class="text-right" style="font-size : 12px;">{{result['regDate']}}</span>
+                    {% if session['userId'] == result['userId'] %}
+                    <span class="text-right" id="comment-delete-{{loop.index}}" style="font-size : 14px; color :#aaaaaa; cursor: pointer;" onClick="javascript:deleteComment(`{{result['commentIdx']}}`);"><i class="fa fa-trash"></i></span>
+                    {% endif %}
+                  </h4>
+                  <p class="comment-content" id="comment-content-{{loop.index}}">{{result['content']}}</p>
+                </div>
+              </div>
+              {% endfor %}{% else %}
+              {% endif %}
+          <br/>
+            <div class="card mb-2">
+              <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                      <textarea class="form-control comment_content" id="comment_content" rows="3" placeholder="댓글을 입력하세요"></textarea><br/>
+                      <div class="text-right"><button type="button" class="btn btn-dark mt-3" onClick="javascript:addReply();">확인</button></div>
+                    </li>
+                </ul>
+              </div>
+          </div>
+          <a href='#' class='btn-floating'><div><i class="fa fa-thumbs-up"></i></div></a>
+         </div> 
     </div>
 {% include 'jquery.html' %}
 <script>
@@ -168,6 +197,71 @@ var content = {{article[0]['content']|tojson|safe}} ;
 // var formatted = "<pre>"+String(content).replace(/(<br>|<br\/>|<br \/>|&lt;br&gt;)/g, '\r\n')+"</pre> ";
 var formatted = "<pre>"+content+"</pre> ";
 $(".article_content").html(formatted);
+var comments = {{comments|tojson|safe}};
+
+for(var i =0; i < comments.length; i++) {
+
+  var comment_formatted = "<pre>"+comments[i].content+"</pre>"
+  $("#comment-content-"+(i+1)).html(comment_formatted);
+}
+
+function addReply() {
+  
+  var commentContent = $("textarea.comment_content").val().replace(/(\n|\r\n)/g, '<br>');
+  var articleIdx = {{article[0]['articleIdx']|tojson|safe}};
+  $.ajax({
+    url: "/delete/comment",
+    type: "post",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    data: JSON.stringify({ 
+      comment_content:commentContent,
+      article_idx : articleIdx,
+    }),
+    dataType: "json",
+    async:false,
+    success: function (data) {
+      if(data.success) {
+        location.href = "/article?articleIdx="+articleIdx;
+      }
+    },
+    error: function (xhr, status, error) {
+        alert("code : " + xhr.status + "\nmessage : " + xhr.responseText);
+    },
+  });
+
+}
+
+function deleteComment(commentIdx) {
+
+  if ( confirm("정말 삭제하시겠습니까 ?") == true ) {
+
+        $.ajax({
+        url: "/delete/comment",
+        type: "post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        data: JSON.stringify({ 
+          comment_idx : commentIdx,
+        }),
+        dataType: "json",
+        async:false,
+        success: function (data) {
+          if(data.success) {
+            location.href = "/article?articleIdx="+articleIdx;
+          }
+        },
+        error: function (xhr, status, error) {
+            alert("code : " + xhr.status + "\nmessage : " + xhr.responseText);
+        },
+      }); 
+    }
+    else {
+        return ;
+    }
+}
 
 </script>
 </body>

@@ -14,6 +14,7 @@ from flask.json import jsonify
 from flask.wrappers import Response
 from sqlalchemy.sql.expression import false
 import model.article_dao as article_dao
+import model.comment_dao as comment_dao
 import model.user_dao as user_dao
 import model.file_dao as file_dao
 import model.rememberme_dao as rememberme_dao
@@ -50,7 +51,6 @@ def _hello():
 
 @application.route("/login", methods=["GET", "POST"])
 def _login():
-
     if request.method == "GET":
         url = urlparse(request.referrer)
         referrer = (
@@ -193,9 +193,12 @@ def _reply():
 @login_required
 def _article():
     article = article_dao.get_article(request)
+    comments = comment_dao.get_comment_list(request)
     same_user = True if (session["userId"] == article[0]["userId"]) else False
     print("#same_user : ", same_user)
-    return render_template("article.html", article=article, same_user=same_user)
+    return render_template(
+        "article.html", article=article, same_user=same_user, comments=comments
+    )
 
 
 @application.route("/create", methods=["POST"])
@@ -336,10 +339,26 @@ def _send_authmail():
     return jsonify(success=success)
 
 
+@application.route("/create/comment", methods=["POST"])
+def _create_comment():
+    return comment_dao.create_comment(request)
+
+
+@application.route("/get/comment", methods=["POST"])
+def _get_comment():
+    return comment_dao.get_comment_list(request)
+
+
+@application.route("/delete/comment", methods=["POST"])
+def _delete_comment():
+    return comment_dao.delete_comment(request)
+
+
 @application.route("/method", methods=["GET", "POST"])
 def method():
     if request.method == "GET":
         return "GET으로 전달"
+
     else:
         return "POST로 전달"
 
